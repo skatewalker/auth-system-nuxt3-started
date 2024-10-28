@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@sidebase/nuxt-auth', '@pinia/nuxt', '@prisma/nuxt'],
+  modules: [
+    '@sidebase/nuxt-auth',
+    '@pinia/nuxt',
+    '@prisma/nuxt',
+    '@nuxtjs/tailwindcss',
+  ],
   auth:{
     isEnabled: true,
     originEnvKey: process.env.NUXT_AUTH_ORIGIN,
@@ -25,4 +30,13 @@ export default defineNuxtConfig({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET
     }
   },
+  tailwindcss: {
+    cssPath: ['~/assets/css/tailwind.css', { injectPosition: "first" }],
+    configPath: 'tailwind.config',
+    exposeConfig: {
+      level: 2
+    },
+    config: {},
+    viewer: true,
+  }
 })
