@@ -11,10 +11,33 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
+  id    Int  @id @default(autoincrement())
   name  String?
+  username String @unique
+  email String  @unique
+  emailVerified DateTime?
+  password String
+  role Role
+  profileImg String?
   posts Post[]
+  lastLogin DateTime?
+  status Status @default(ACTIVE)
+  account Account[]
+  session Session[]
+  createdAt DateTime
+  updatedAt DateTime
+  @@map("authgit_db_users") //mapeo del modelo User en la tabla como authgit_db_users
+}
+
+enum Role {
+  SUBSCRIBER
+  PUBLISHER
+  ADMINISTRATOR
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
 }
 
 model Post {
@@ -24,4 +47,31 @@ model Post {
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
+  @@map("authgit_db_blog_articles_post") //mapeo del modelo Account en la tabla como authgit_db_blog_articles_post
+}
+
+model Account  {
+    id        Int     @id @default(autoincrement())
+    userId Int @unique
+    type String
+    provider String
+    providerAccountId String
+    refreshToken String?
+    accessToken String?
+    expiresAt Int?
+    tokenType String?
+    scope String?
+    idToken String?
+    sessionState String?
+    subscribed Boolean @default(false)
+    @@map("authgit_db_acounts") //mapeo del modelo Account en la tabla como authgit_db_acounts
+}
+
+model Session {
+  id Int @id @default(autoincrement())
+  sessionToken String @unique
+  userId Int
+  expiresAt DateTime
+  user User @relation(fields:[userId], references: [id], onDelete:Cascade)
+  @@map("authgit_db_sessions") //mapeo del modelo Session en la tabla como authgit_db_sessions
 }
