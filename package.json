@@ -7,7 +7,9 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.3",
@@ -31,14 +33,15 @@
     "nuxt": "^3.13.2",
     "pinia": "^2.2.4",
     "vue": "latest",
-    "vue-router": "latest",
-    "zod": "^3.25.67"
+    "vue-router": "latest"
   },
   "overrides": {
     "vue": "latest"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^1.4.1",
     "@prisma/client": "^5.22.0",
-    "@types/node": "^24.0.3"
+    "@types/node": "^24.0.3",
+    "zod": "^3.25.67"
   }
 }

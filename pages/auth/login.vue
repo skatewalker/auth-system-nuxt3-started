@@ -2,9 +2,7 @@
   <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Iniciar sesión
-        </h2>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Iniciar sesión</h2>
         <p class="mt-2 text-center text-sm text-gray-600">
           ¿No tienes cuenta?
           <NuxtLink to="/auth/register" class="font-medium text-indigo-600 hover:text-indigo-500">
@@ -46,9 +44,7 @@
               type="checkbox"
               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
             />
-            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-              Recordarme
-            </label>
+            <label for="remember-me" class="ml-2 block text-sm text-gray-900"> Recordarme </label>
           </div>
 
           <div class="text-sm">
@@ -72,9 +68,9 @@
 </template>
 
 <script setup>
-const email = ref('')
-const password = ref('')
-const rememberMe = ref(false)
+const email = ref('');
+const password = ref('');
+const rememberMe = ref(false);
 
 const handleLogin = async () => {
   try {
@@ -82,10 +78,10 @@ const handleLogin = async () => {
     console.log('Login:', {
       email: email.value,
       password: password.value,
-      rememberMe: rememberMe.value
-    })
+      rememberMe: rememberMe.value,
+    });
   } catch (error) {
-    console.error('Error en login:', error)
+    console.error('Error en login:', error);
   }
-}
+};
 </script>

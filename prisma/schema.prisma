@@ -10,68 +10,63 @@ datasource db {
   url      = env("NUXT_DATABASE_URL")
 }
 
-model User {
-  id    Int  @id @default(autoincrement())
-  name  String?
-  username String @unique
-  email String  @unique
-  emailVerified DateTime?
-  password String
-  role Role
-  profileImg String?
-  posts Post[]
-  lastLogin DateTime?
-  status Status @default(ACTIVE)
-  account Account[]
-  session Session[]
-  createdAt DateTime
-  updatedAt DateTime
-  @@map("authgit_db_users") //mapeo del modelo User en la tabla como authgit_db_users
-}
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-enum Role {
-  SUBSCRIBER
-  PUBLISHER
-  ADMINISTRATOR
-}
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-enum Status {
-  ACTIVE
-  INACTIVE
-}
-
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
-  @@map("authgit_db_blog_articles_post") //mapeo del modelo Account en la tabla como authgit_db_blog_articles_post
-}
-
-model Account  {
-    id        Int     @id @default(autoincrement())
-    userId Int @unique
-    type String
-    provider String
-    providerAccountId String
-    refreshToken String?
-    accessToken String?
-    expiresAt Int?
-    tokenType String?
-    scope String?
-    idToken String?
-    sessionState String?
-    subscribed Boolean @default(false)
-    @@map("authgit_db_acounts") //mapeo del modelo Account en la tabla como authgit_db_acounts
+  @@unique([provider, providerAccountId])
+  @@map("authgit_db_accounts") // Renombrado para consistencia
 }
 
 model Session {
-  id Int @id @default(autoincrement())
-  sessionToken String @unique
-  userId Int
-  expiresAt DateTime
-  user User @relation(fields:[userId], references: [id], onDelete:Cascade)
-  @@map("authgit_db_sessions") //mapeo del modelo Session en la tabla como authgit_db_sessions
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("authgit_db_sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String? // Campo común para avatares de NextAuth
+  password      String? // Hacemos la contraseña opcional para usuarios de OAuth
+  username      String?   @unique // Hacemos el username opcional para usuarios de OAuth
+  role          String    @default("USER") // Rol por defecto, puedes usar un Enum si lo prefieres
+  profileImg    String?
+  lastLogin     DateTime?
+  status        String    @default("ACTIVE") // Estado por defecto, puedes usar un Enum si lo prefieres
+
+  accounts      Account[]
+  sessions      Session[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("authgit_db_users")
+}
+
+model VerificationToken {
+  identifier String   @id
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("authgit_db_verificationtokens") // Nombre de tabla
 }
