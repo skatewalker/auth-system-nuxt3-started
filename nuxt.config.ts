@@ -8,6 +8,24 @@ export default defineNuxtConfig({
       rules: {
         'vue/multi-word-component-names': 'warn',
         'no-console': 'warn',
+        'indent': ['error', 'tab'],
+        '@typescript-eslint/naming-convention': [
+          'error',
+          {
+            selector: 'variable',
+            format: ['camelCase', 'UPPER_CASE'],
+            leadingUnderscore: 'allow',
+            trailingUnderscore: 'allow',
+          },
+          {
+            selector: 'function',
+            format: ['camelCase'],
+          },
+          {
+            selector: 'typeLike',
+            format: ['PascalCase'],
+          },
+        ],
       },
     },
   },

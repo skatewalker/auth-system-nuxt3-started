@@ -9,6 +9,9 @@
             Inicia sesión aquí
           </NuxtLink>
         </p>
+        <div v-if="errorMessage" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded relative" role="alert">
+          <span class="block sm:inline">{{ errorMessage }}</span>
+        </div>
 
         <form class="mt-8 space-y-6" @submit.prevent="handleRegister">
           <div class="rounded-md shadow-sm -space-y-px">
@@ -92,9 +95,8 @@ import { useUserStore } from '@/store/user';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const userStore = useUserStore;
+const userStore = useUserStore(); // Instanciar correctamente
 
-const name = ref('');
 const username = ref('');
 const email = ref('');
 const password = ref('');
@@ -103,15 +105,29 @@ const errorMessage = ref('');
 const acceptTerms = ref(false);
 
 const handleRegister = async () => {
+  errorMessage.value = ''; // Limpiar errores anteriores
+
+  // Validaciones del lado del cliente
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = 'Las contraseñas no coinciden';
+    return;
+  }
+
+  if (!acceptTerms.value) {
+    errorMessage.value = 'Debes aceptar los términos y condiciones';
+    return;
+  }
+
   try {
-    errorMessage.value = '';
-    const response = await useAsyncData(() =>
-      userStore.registerUSer(username, email, password, confirmPassword),
-    );
+    // Llamar a la acción registerUser del store
+    await userStore.registerUser(email.value, username.value, password.value);
+
+    // Si el registro es exitoso, redirigir al login
     router.push('/auth/login');
   } catch (error) {
-    console.error('Error en registro:', error);
-    errorMessage.value = 'Ocurrió un error durante el registro, Intentalo de nuevo.';
+    // El error ya viene con el mensaje del backend o del store
+    errorMessage.value = error.message || 'Ocurrió un error durante el registro, Inténtalo de nuevo.';
+    console.error('Error en registro (componente):', error);
   }
 };
 </script>
